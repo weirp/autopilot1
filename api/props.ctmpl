@@ -1,0 +1,24 @@
+
+# Example template file
+
+# ===================
+# services
+
+
+{{range services}}# {{.Name}}{{range service .Name}}
+{{.Address}}{{end}}
+
+{{end}}
+
+
+#
+# db service
+
+{{ range service "api"}}
+server {{ .Name }} {{ .Address }}:{{ .Port }}{{end}}
+
+# ===================
+
+
+bank.code={{ env "BANK_CODE" }}
+# this is the end

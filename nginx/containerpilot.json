@@ -1,0 +1,28 @@
+{
+    "consul": "consul:8500",
+    "preStart": [
+        "consul-template", "-once", "-consul", "consul:8500",
+        "-template", "/etc/containerpilot/nginx.conf.ctmpl:/etc/nginx/nginx.conf"
+    ],
+    "services": [
+        {
+            "name": "nginx",
+            "port": 80
+            "interfaces": ["eth1","eth0"],
+            "health": "/usr/bin/curl --fail -s http://localhost/health",
+            "poll": 10,
+            "ttl": 25
+        }
+    ],
+    "backends": [
+        {
+            "name": "api",
+            "poll": 3,
+            "onChange": [
+                "consul-template", "-once", "-consul", "consul:8500",
+                "-template", "/etc/containerpilot/nginx.conf.ctmpl:/etc/nginx/nginx.conf -s reload"
+            ]
+
+        }
+    ]
+}
